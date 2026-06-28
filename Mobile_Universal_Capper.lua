@@ -39,7 +39,7 @@ mainCorner.Parent = mainFrame
 local mobileToggleBtn = Instance.new("TextButton")
 mobileToggleBtn.Name = "MobileMenuToggle"
 mobileToggleBtn.Size = UDim2.new(0, 60, 0, 60)
-mobileToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0) -- Top left area, clear of standard controls
+mobileToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
 mobileToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 mobileToggleBtn.TextColor3 = Color3.fromRGB(0, 150, 255)
 mobileToggleBtn.Text = "Menu"
@@ -49,7 +49,7 @@ mobileToggleBtn.Active = true
 mobileToggleBtn.Parent = screenGui
 
 local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 30) -- Makes it circular
+toggleCorner.CornerRadius = UDim.new(0, 30)
 toggleCorner.Parent = mobileToggleBtn
 
 local toggleStroke = Instance.new("UIStroke")
@@ -628,31 +628,31 @@ RunService.Heartbeat:Connect(function()
             humanoid:ChangeState(Enum.HumanoidStateType.Physics)
         end
 
+        -- [[ BLOX FRUITS BOAT & VEHICLE DETECTION ]]
         local targetPhysicsPart = rootPart
         if humanoid.Sit and humanoid.SeatPart then
-            local vehicleModel = humanoid.SeatPart:FindFirstAncestorOfClass("Model")
-            if vehicleModel then
-                targetPhysicsPart = vehicleModel.PrimaryPart or humanoid.SeatPart
+            local customVehicle = humanoid.SeatPart:FindFirstAncestorOfClass("Model")
+            if customVehicle then
+                targetPhysicsPart = customVehicle.PrimaryPart 
+                    or customVehicle:FindFirstChild("MainPart") 
+                    or customVehicle:FindFirstChild("Body") 
+                    or customVehicle:FindFirstChildOfClass("MeshPart") 
+                    or customVehicle:FindFirstChildOfClass("Part") 
+                    or humanoid.SeatPart
             else
                 targetPhysicsPart = humanoid.SeatPart
             end
         end
 
         targetPhysicsPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-        
-        -- Default fly direction setup
         local flyDirection = Vector3.new(0, 0, 0)
         
-        -- Pull move vector direction directly from the mobile UI joystick module
+        -- Pull move vector direction directly from the mobile UI joystick module[cite: 1]
         if PlayerModule and PlayerModule.GetControls then
             local moveVector = PlayerModule:GetControls():GetMoveVector()
-            
             if moveVector.Magnitude > 0 then
-                -- Translate the 2D virtual thumbstick space relative to the camera face angle
                 local forward = camera.CFrame.LookVector
                 local right = camera.CFrame.RightVector
-                
-                -- Standard flat plane translation + looking up/down adjustment
                 flyDirection = (forward * -moveVector.Z) + (right * moveVector.X)
             end
         end
